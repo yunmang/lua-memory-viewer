@@ -172,7 +172,9 @@ local function hasSamePath(node, ForestCacheMap)
 	local path = findPath(node)
 	
 	for i, pathNode in ipairs(path) do
-		if string.sub(pathNode.Info, 1, 1) == "v" then -- do not check for table key
+		local pathInfo = pathNode.Info
+		-- do not check for table key, as table value may be the same.
+		if string.sub(pathInfo, 1, 1) == "v" then
 			return false
 		end
 	end
@@ -206,7 +208,7 @@ local function hasSamePath(node, ForestCacheMap)
 end
 
 local ForestCacheMap = false
-local function ForestSnapshot(root, checkRoot)
+function ForestSnapshot(root, checkRoot)
 	root = root or debug.getregistry()
 	checkRoot = checkRoot or defaultCheckRoot
 
@@ -265,7 +267,6 @@ local function ForestSnapshot(root, checkRoot)
 				newObjectMap[object] = node
 			end
 		end
-		-- dumpTable(newObjectMap)
 
 		-- Filter same position
 		for object, node in pairs(newObjectMap) do
@@ -273,7 +274,6 @@ local function ForestSnapshot(root, checkRoot)
 				newObjectMap[object] = nil
 			end
 		end
-		-- dumpTable(newObjectMap, "same pos")
 
 		-- Filter subtree node
 		for object, node in pairs(newObjectMap) do
@@ -288,7 +288,6 @@ local function ForestSnapshot(root, checkRoot)
 				newObjectMap[object] = nil
 			end
 		end
-		-- dumpTable(newObjectMap, "sub tree")
 	end
 
 	IgnoreMap[ForestCacheMap] = nil

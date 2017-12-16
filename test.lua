@@ -31,21 +31,6 @@ local function tableToString(t)
 	return msg
 end
 
-local function nodeToString(node)
-	local info = node.Info
-	if not info then
-		return ""
-	end
-
-	local ret = info
-	local object = node.Object
-	if IsTable(object) and object._className then
-		ret = string.format("%s<cls:%s>", ret, object._className)
-	end
-
-	return ret
-end
-
 local function dumpTable(t, value, count)
 	print("dump:", t, " value:", value)
 	count = count or 10
@@ -65,6 +50,21 @@ end
 
 local function dumpFunction(func, value)
 	print(getFunctionPath(func), value)
+end
+
+local function nodeToString(node)
+	local info = node.Info
+	if not info then
+		return ""
+	end
+
+	local ret = info
+	local object = node.Object
+	if IsTable(object) and object._className then
+		ret = string.format("%s<cls:%s>", ret, object._className)
+	end
+
+	return ret
 end
 
 local function dumpPath(object, node)
@@ -108,8 +108,17 @@ local function genTree()
 	root[5] = {
 		["key"] = {
 			[genId()] = {["name"] = "path"},
-		}
+		},
 	}
+
+	-- table as key
+	local key = {
+		["key"] = {
+			[1] = {["name"] = "path"},
+		},
+	}
+	root[6] = "table as key"
+	root[key] = "table as key"
 end
 
 local lastSize = false
@@ -146,3 +155,5 @@ function Test()
 	genTree()
 	dumpSnapshot()
 end
+
+Test()
