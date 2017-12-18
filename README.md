@@ -1,4 +1,4 @@
-# lua_memory_leak_viewer
+# lua-memory-viewer
 
 ## Intro
 
